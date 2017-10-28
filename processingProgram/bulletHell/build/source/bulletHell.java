@@ -26,7 +26,7 @@ final int enemySize = 10;
 final int enemyMoveScale = 2;
 final int enemyMoveDelay = 100;
 final int bulletNum = 20;
-final int bulletSize = 10;
+final int bulletSize = 20;
 
 
 public void setup() {
@@ -85,7 +85,7 @@ class Player extends SpaceShip {
   }
 
   public void drawShip() {
-    ellipse(x-playerSize/2, y-playerSize/2, playerSize, playerSize);
+    ellipse(x, y, playerSize, playerSize);
   }
 
   public int getx(){
@@ -207,7 +207,7 @@ class Enemy extends SpaceShip {
           }
 
           public void drawBullet() {
-            ellipse(PApplet.parseInt(x-bulletSize/2), PApplet.parseInt(y-bulletSize/2), bulletSize, bulletSize);
+            ellipse(PApplet.parseInt(x), PApplet.parseInt(y), bulletSize, bulletSize);
           }
 
           public boolean checkValidity() {
@@ -219,9 +219,10 @@ class Enemy extends SpaceShip {
           }
 
           public boolean ifHit(int playerx,int playery){
-            float distSqr = sq(x-playerx) + sq(y-playery);
+            float distSqr = sq(x-PApplet.parseFloat(playerx)) + sq(y-PApplet.parseFloat(playery));
             //when distance is less than sum of radius -- hit
-            if (distSqr < playerSize + bulletSize){
+            if (distSqr < sq(PApplet.parseFloat(playerSize + bulletSize)/2)){
+              println("HIT");
               return true;
             }
             return false;

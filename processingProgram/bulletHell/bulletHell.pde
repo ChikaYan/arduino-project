@@ -10,7 +10,7 @@ final int enemySize = 10;
 final int enemyMoveScale = 2;
 final int enemyMoveDelay = 100;
 final int bulletNum = 20;
-final int bulletSize = 10;
+final int bulletSize = 20;
 
 
 void setup() {
@@ -69,7 +69,7 @@ class Player extends SpaceShip {
   }
 
   void drawShip() {
-    ellipse(x-playerSize/2, y-playerSize/2, playerSize, playerSize);
+    ellipse(x, y, playerSize, playerSize);
   }
 
   int getx(){
@@ -191,7 +191,7 @@ class Enemy extends SpaceShip {
           }
 
           void drawBullet() {
-            ellipse(int(x-bulletSize/2), int(y-bulletSize/2), bulletSize, bulletSize);
+            ellipse(int(x), int(y), bulletSize, bulletSize);
           }
 
           boolean checkValidity() {
@@ -203,9 +203,10 @@ class Enemy extends SpaceShip {
           }
 
           boolean ifHit(int playerx,int playery){
-            float distSqr = sq(x-playerx) + sq(y-playery);
+            float distSqr = sq(x-float(playerx)) + sq(y-float(playery));
             //when distance is less than sum of radius -- hit
-            if (distSqr < playerSize + bulletSize){
+            if (distSqr < sq(float(playerSize + bulletSize)/2)){
+              println("HIT");
               return true;
             }
             return false;
