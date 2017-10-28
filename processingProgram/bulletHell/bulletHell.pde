@@ -57,7 +57,6 @@ class Player extends SpaceShip{
   }
 
   void drawShip(){
-
     ellipse(x-20,y-20,40,40);
   }
 
@@ -70,6 +69,7 @@ class Player extends SpaceShip{
 class Enemy extends SpaceShip{
   boolean hasTarget = false;
   int targetx = 0;
+  int moveScale = 2;
 
   Enemy(){
     x = width/2;
@@ -78,11 +78,15 @@ class Enemy extends SpaceShip{
 
   void update(){
     //move enemy towards chosen target, or select new target
-    if (abs(targetx-x)<=1){
+    if (abs(targetx-x) < moveScale){
       hasTarget = false;
     }
     if (hasTarget){
-      x += round((targetx-x)/abs(targetx-x));
+      if (targetx > x){
+        x += moveScale;
+      }else if (targetx < x){
+        x -= moveScale;
+      }
       }else{
         //ensure next target point is far away from last one
         if (targetx < 800){
