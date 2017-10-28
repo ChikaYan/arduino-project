@@ -30,11 +30,8 @@ class SpaceShip{
     drawShip();
   }
 
-  void update(){
-  }
-
-  void drawShip(){
-  }
+  void update(){}
+  void drawShip(){}
 
 }
 
@@ -68,8 +65,8 @@ class Player extends SpaceShip{
 
 class Enemy extends SpaceShip{
   boolean hasTarget = false;
-  int targetx = 0;
-  int moveScale = 2;
+  boolean canMove = false;
+  int targetx = 0, moveScale = 2, moveDelay = 0;
 
   Enemy(){
     x = width/2;
@@ -77,35 +74,44 @@ class Enemy extends SpaceShip{
   }
 
   void update(){
-    //move enemy towards chosen target, or select new target
-    if (abs(targetx-x) < moveScale){
-      hasTarget = false;
-    }
-    if (hasTarget){
-      if (targetx > x){
-        x += moveScale;
-      }else if (targetx < x){
-        x -= moveScale;
+    //if can move, move enemy towards chosen target, or select new target
+    if (canMove){
+      if (abs(targetx-x) < moveScale){
+        hasTarget = false;
       }
-      }else{
-        //ensure next target point is far away from last one
-        if (targetx < 800){
-          targetx = int(random(1100,1300));
-        }else{
-          targetx = int(random(300,500));
+      if (hasTarget){
+        if (targetx > x){
+          x += moveScale;
+          }else if (targetx < x){
+            x -= moveScale;
+          }
+          }else{
+            //ensure next target point is far away from last one
+            if (targetx < 800){
+              targetx = int(random(1100,1300));
+              }else{
+                targetx = int(random(300,500));
+              }
+              hasTarget = true;
+              canMove = false;
+            }
+          }else{
+            moveDelay += 1;
+            if (moveDelay >= 120){
+              moveDelay = 0;
+              canMove = true;
+            }
+          }
         }
-        hasTarget = true;
+
+        void drawShip(){
+          triangle(x,y,x-20,y-30,x+20,y-30);
+        }
+
+
+
       }
 
-    }
-
-    void drawShip(){
-      triangle(x,y,x-20,y-30,x+20,y-30);
-    }
-
-
-
-  }
 
 
 
@@ -123,5 +129,4 @@ class Enemy extends SpaceShip{
 
 
 
-
-  //
+      //

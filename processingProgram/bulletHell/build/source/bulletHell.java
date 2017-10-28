@@ -46,11 +46,8 @@ class SpaceShip{
     drawShip();
   }
 
-  public void update(){
-  }
-
-  public void drawShip(){
-  }
+  public void update(){}
+  public void drawShip(){}
 
 }
 
@@ -73,7 +70,6 @@ class Player extends SpaceShip{
   }
 
   public void drawShip(){
-
     ellipse(x-20,y-20,40,40);
   }
 
@@ -85,8 +81,8 @@ class Player extends SpaceShip{
 
 class Enemy extends SpaceShip{
   boolean hasTarget = false;
-  int targetx = 0;
-  int moveScale = 2;
+  boolean canMove = false;
+  int targetx = 0, moveScale = 2, moveDelay = 0;
 
   Enemy(){
     x = width/2;
@@ -94,35 +90,44 @@ class Enemy extends SpaceShip{
   }
 
   public void update(){
-    //move enemy towards chosen target, or select new target
-    if (abs(targetx-x) < moveScale){
-      hasTarget = false;
-    }
-    if (hasTarget){
-      if (targetx > x){
-        x += moveScale;
-      }else if (targetx < x){
-        x -= moveScale;
+    //if can move, move enemy towards chosen target, or select new target
+    if (canMove){
+      if (abs(targetx-x) < moveScale){
+        hasTarget = false;
       }
-      }else{
-        //ensure next target point is far away from last one
-        if (targetx < 800){
-          targetx = PApplet.parseInt(random(1100,1300));
-        }else{
-          targetx = PApplet.parseInt(random(300,500));
+      if (hasTarget){
+        if (targetx > x){
+          x += moveScale;
+          }else if (targetx < x){
+            x -= moveScale;
+          }
+          }else{
+            //ensure next target point is far away from last one
+            if (targetx < 800){
+              targetx = PApplet.parseInt(random(1100,1300));
+              }else{
+                targetx = PApplet.parseInt(random(300,500));
+              }
+              hasTarget = true;
+              canMove = false;
+            }
+          }else{
+            moveDelay += 1;
+            if (moveDelay >= 120){
+              moveDelay = 0;
+              canMove = true;
+            }
+          }
         }
-        hasTarget = true;
+
+        public void drawShip(){
+          triangle(x,y,x-20,y-30,x+20,y-30);
+        }
+
+
+
       }
 
-    }
-
-    public void drawShip(){
-      triangle(x,y,x-20,y-30,x+20,y-30);
-    }
-
-
-
-  }
 
 
 
@@ -140,8 +145,7 @@ class Enemy extends SpaceShip{
 
 
 
-
-  //
+      //
   public void settings() {  size(1600, 1200); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "bulletHell" };
