@@ -17,7 +17,6 @@ public class bulletHell extends PApplet {
 //Bullet hell game for arduino coursework
 //Created by Walter Wu on 28/10/17
 
-int gridSize = 5;
 ArrayList bullets = new ArrayList();
 Player player;
 Enemy enemy;
@@ -59,23 +58,23 @@ class SpaceShip{
 class Player extends SpaceShip{
   //for player: x,y are centre of circle
   Player(){
-    x = width/2/gridSize;
-    y = height/gridSize - 10;
+    x = width/2;
+    y = height - 50;
   }
 
   public void update(){
     //update position of player
-    if (keyPressed && keyCode == LEFT && x > 16) {
-      x-=3;
+    if (keyPressed && keyCode == LEFT && x > 80) {
+      x-=15;
     }
-    if (keyPressed && keyCode == RIGHT && x < width/gridSize - 16) {
-      x+=3;
+    if (keyPressed && keyCode == RIGHT && x < width - 80) {
+      x+=15;
     }
   }
 
   public void drawShip(){
 
-    ellipse((x-4)*gridSize,(y-4)*gridSize,8*gridSize,8*gridSize);
+    ellipse(x-20,y-20,40,40);
   }
 
   public void ifHit(){
@@ -89,38 +88,41 @@ class Enemy extends SpaceShip{
   int targetx = 0,targety = 0;
 
   Enemy(){
-    x = width/2/gridSize;
-    y = 10;
+    x = width/2;
+    y = 50;
   }
 
   public void update(){
     //move enemy towards chosen target, or select new target
-    if (frameCount%5 == 0){
-      if (abs(targety-y)<=1 || abs(targetx-x)<=1){
-        hasTarget = false;
-      }
-      if (hasTarget){
-        y += round((targety-y)/abs(targety-y));
-        x += round((targetx-x)/abs(targety-y));
-        }else{
-          int tempx,tempy;
-          boolean ifFound = false;
-          while (! ifFound){
-            tempx = PApplet.parseInt(random(80,240));
-            tempy = PApplet.parseInt(random(20,40));
-            if ((abs(tempx-targetx) > 80 && abs(tempx-targetx) < 140 && abs(tempy-targety)> 8 && abs(tempy-targety) < 15) || (targetx == 0)) {
-              targetx = tempx;
-              targety = tempy;
-              ifFound = true;
-              hasTarget = true;
-            }
+
+    if (abs(targety-y)<=1 || abs(targetx-x)<=1){
+      hasTarget = false;
+    }
+    if (hasTarget){
+      // y += round((targety-y)/abs(targety-y));
+      // x += round((targetx-x)/abs(targety-y));
+      x += round((targetx-x)/abs(targetx-x));
+      y += round((targety-y)/abs(targetx-x));
+      }else{
+
+        int tempx,tempy;
+        boolean ifFound = false;
+        while (! ifFound){
+          tempx = PApplet.parseInt(random(400,1200));
+          tempy = PApplet.parseInt(random(100,200));
+          if ((abs(tempx-targetx) > 350 && abs(tempx-targetx) < 700 && abs(tempy-targety)> 40 && abs(tempy-targety) < 75) || (targetx == 0)) {
+            targetx = tempx;
+            targety = tempy;
+            ifFound = true;
+            hasTarget = true;
           }
         }
       }
+
     }
 
     public void drawShip(){
-      triangle(x*gridSize,y*gridSize,(x-4)*gridSize,(y-6)*gridSize,(x+4)*gridSize,(y-6)*gridSize);
+      triangle(x,y,x-20,y-30,x+20,y-30);
     }
 
 
