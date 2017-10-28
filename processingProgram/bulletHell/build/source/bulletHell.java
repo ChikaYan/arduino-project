@@ -21,7 +21,6 @@ ArrayList bullets = new ArrayList();
 Player player;
 Enemy enemy;
 
-
 public void setup(){
   fill(255);
   
@@ -35,6 +34,19 @@ public void draw(){
   background(0);
   player.draw();
   enemy.draw();
+
+  //remove the bullets that are out of screen
+  for(int i =0; i < bullets.size();i++){
+    Bullet bInstance = (Bullet) bullets.get(i);
+    if (! bInstance.checkValidity()){
+      bullets.remove(i);
+    }
+  }
+
+  for(int i =0; i < bullets.size();i++){
+    Bullet bInstance = (Bullet) bullets.get(i);
+    bInstance.draw();
+  }
 }
 
 
@@ -80,6 +92,7 @@ class Player extends SpaceShip{
 
 
 class Enemy extends SpaceShip{
+  //for enemy, x,y will be bottom point of triangle
   boolean hasTarget = false;
   boolean canMove = false;
   int targetx = 0, moveScale = 2, moveDelay = 0;
@@ -113,20 +126,64 @@ class Enemy extends SpaceShip{
             }
           }else{
             moveDelay += 1;
-            if (moveDelay >= 120){
+            if (moveDelay >= 80){
               moveDelay = 0;
               canMove = true;
             }
           }
+          if (frameCount%30 == 0){
+            shoot();
+          }
+
         }
 
         public void drawShip(){
           triangle(x,y,x-20,y-30,x+20,y-30);
         }
 
-
+        public void shoot(){
+          for (int i =0;i<20;i++){
+          bullets.add(new Bullet(PApplet.parseFloat(x),PApplet.parseFloat(y),random(-2,3),random(1,3)));
+          }
+        }
 
       }
+
+class Bullet{
+  //for bullets, x,y will be centre of circle
+  float x,y,xSpeed, ySpeed;
+
+  Bullet(float startx,float starty,float xspeed,float yspeed){
+    x = startx;
+    y = starty;
+    xSpeed = xspeed;
+    ySpeed = yspeed;
+  }
+
+  public void draw(){
+    update();
+    checkValidity();
+    drawBullet();
+  }
+
+  public void update(){
+    x += xSpeed;
+    y += ySpeed;
+  }
+
+  public void drawBullet(){
+    ellipse(PApplet.parseInt(x-4),PApplet.parseInt(y-4),PApplet.parseInt(8),PApplet.parseInt(8));
+  }
+
+  public boolean checkValidity(){
+    if (x < -4 || x > width+4 || y < -4 || y > height+4){
+      //bullet has left screen
+      return false;
+    }
+    return true;
+  }
+
+}
 
 
 
