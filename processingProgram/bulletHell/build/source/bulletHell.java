@@ -85,38 +85,33 @@ class Player extends SpaceShip{
 
 class Enemy extends SpaceShip{
   boolean hasTarget = false;
-  int targetx = 0,targety = 0;
+  int targetx = 0;
+  int moveScale = 2;
 
   Enemy(){
     x = width/2;
-    y = 50;
+    y = 100;
   }
 
   public void update(){
     //move enemy towards chosen target, or select new target
-
-    if (abs(targety-y)<=1 || abs(targetx-x)<=1){
+    if (abs(targetx-x) < moveScale){
       hasTarget = false;
     }
     if (hasTarget){
-      // y += round((targety-y)/abs(targety-y));
-      // x += round((targetx-x)/abs(targety-y));
-      x += round((targetx-x)/abs(targetx-x));
-      y += round((targety-y)/abs(targetx-x));
+      if (targetx > x){
+        x += moveScale;
+      }else if (targetx < x){
+        x -= moveScale;
+      }
       }else{
-
-        int tempx,tempy;
-        boolean ifFound = false;
-        while (! ifFound){
-          tempx = PApplet.parseInt(random(400,1200));
-          tempy = PApplet.parseInt(random(100,200));
-          if ((abs(tempx-targetx) > 350 && abs(tempx-targetx) < 700 && abs(tempy-targety)> 40 && abs(tempy-targety) < 75) || (targetx == 0)) {
-            targetx = tempx;
-            targety = tempy;
-            ifFound = true;
-            hasTarget = true;
-          }
+        //ensure next target point is far away from last one
+        if (targetx < 800){
+          targetx = PApplet.parseInt(random(1100,1300));
+        }else{
+          targetx = PApplet.parseInt(random(300,500));
         }
+        hasTarget = true;
       }
 
     }
