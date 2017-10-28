@@ -4,6 +4,13 @@
 ArrayList bullets = new ArrayList();
 Player player;
 Enemy enemy;
+final int playerSize = 40;
+final int enemySize = 10;
+final int enemyMoveScale = 2;
+final int enemyMoveDelay = 100;
+final int bulletNum = 20;
+final int bulletSize = 10;
+
 
 void setup(){
   fill(255);
@@ -66,7 +73,7 @@ class Player extends SpaceShip{
   }
 
   void drawShip(){
-    ellipse(x-20,y-20,40,40);
+    ellipse(x-playerSize/2,y-playerSize/2,playerSize,playerSize);
   }
 
   void ifHit(){
@@ -79,7 +86,7 @@ class Enemy extends SpaceShip{
   //for enemy, x,y will be bottom point of triangle
   boolean hasTarget = false;
   boolean canMove = false;
-  int targetx = 0, moveScale = 2, moveDelay = 0;
+  int targetx = 0, delayCount = 0;
 
   Enemy(){
     x = width/2;
@@ -89,14 +96,14 @@ class Enemy extends SpaceShip{
   void update(){
     //if can move, move enemy towards chosen target, or select new target
     if (canMove){
-      if (abs(targetx-x) < moveScale){
+      if (abs(targetx-x) < enemyMoveScale){
         hasTarget = false;
       }
       if (hasTarget){
         if (targetx > x){
-          x += moveScale;
+          x += enemyMoveScale;
           }else if (targetx < x){
-            x -= moveScale;
+            x -= enemyMoveScale;
           }
           }else{
             //ensure next target point is far away from last one
@@ -109,9 +116,9 @@ class Enemy extends SpaceShip{
               canMove = false;
             }
           }else{
-            moveDelay += 1;
-            if (moveDelay >= 80){
-              moveDelay = 0;
+            delayCount += 1;
+            if (delayCount >= enemyMoveDelay){
+              delayCount = 0;
               canMove = true;
             }
           }
@@ -122,11 +129,11 @@ class Enemy extends SpaceShip{
         }
 
         void drawShip(){
-          triangle(x,y,x-20,y-30,x+20,y-30);
+          triangle(x,y,x-2*enemySize,y-3*enemySize,x+2*enemySize,y-3*enemySize);
         }
 
         void shoot(){
-          for (int i =0;i<20;i++){
+          for (int i =0;i<bulletNum;i++){
           bullets.add(new Bullet(float(x),float(y),random(-2,3),random(1,3)));
           }
         }
@@ -156,11 +163,11 @@ class Bullet{
   }
 
   void drawBullet(){
-    ellipse(int(x-4),int(y-4),int(8),int(8));
+    ellipse(int(x-bulletSize/2),int(y-bulletSize/2),bulletSize,bulletSize);
   }
 
   boolean checkValidity(){
-    if (x < -4 || x > width+4 || y < -4 || y > height+4){
+    if (x < -(bulletSize/2) || x > width+bulletSize/2 || y < -(bulletSize/2) || y > height+bulletSize/2){
       //bullet has left screen
       return false;
     }
