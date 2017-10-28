@@ -1,6 +1,6 @@
 
 int leftInPin = 7;
-int rightInPin = 9;
+int rightInPin = 8;
 int currentStat = 0; //0 means untilted, 1 means left-tilted and 2 means right-tilted
 
 void setup() {
