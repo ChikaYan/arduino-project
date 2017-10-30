@@ -12,11 +12,11 @@ void setup(){
     ard.pinMode(leftInPin, ard.INPUT);
     ard.pinMode(rightInPin, ard.INPUT);
     println("Untilted");
-    
+
 }
 
 void draw(){
-  
+
     //check if status has changed
     if (ard.digitalRead(leftInPin) == 1 && currentStat != 1){
         currentStat = 1;
@@ -28,7 +28,7 @@ void draw(){
         currentStat = 0;
         println(currentStat);//untilted
     }
-    
+
     delay(100);
     //delay in case of massive output
 }
