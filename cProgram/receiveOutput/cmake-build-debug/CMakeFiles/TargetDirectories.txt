@@ -1,3 +1,0 @@
-/cygdrive/d/CollegeStuff/COMP101P/Arduino/C Program/receiveOutput/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/cygdrive/d/CollegeStuff/COMP101P/Arduino/C Program/receiveOutput/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/d/CollegeStuff/COMP101P/Arduino/C Program/receiveOutput/cmake-build-debug/CMakeFiles/receiveOutputTest.dir
