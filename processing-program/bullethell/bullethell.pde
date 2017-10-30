@@ -1,6 +1,11 @@
-//Bullet hell game for Arduino coursework
-//Created by Walter Wu on 28/10/17
+// Bullet hell game for Arduino coursework
+// Created by Walter Wu on 28/10/17
 
+// Following library is used in this program:
+// Title: Firmata library for Processing
+// Author: soundanalogous
+// Date: 8 Nov 2016
+// Availabile at https://github.com/firmata/processing/releases/tag/latest
 
 import processing.serial.*;
 import cc.arduino.*;
