@@ -2,24 +2,41 @@
 //Created by Walter Wu on 28/10/17
 
 
+import processing.serial.*;
+import cc.arduino.*;
+
+Arduino ard;
 Player player;
 Enemy enemy;
 boolean gameOver;
 int score;
-final int PLAYER_MOVE_SPEED = 10;
+ArduinoStatus status;
+
+final int LEFT_IN_PIN = 7;
+final int RIGHT_IN_PIN = 8;
+final int PLAYER_MOVE_SPEED = 5;
 final int PLAYER_SIZE = 40;
 final int ENEMY_SIZE = 20;
 final int ENEMY_MOVE_SPEED = 2;
 final int ENEMY_MOVE_DELAY = 100;
 final int ENEMY_SHOOT_DELAY = 200;
-final int BULLET_NUM = 60;
+final int BULLET_NUM = 20;
 final int BULLET_SIZE = 20;
+
+
+enum ArduinoStatus{
+  untilted, left_tilted, right_tilted
+}
 
 
 void setup() {
   size(1600, 1200);
   background(0);
   noStroke();
+  ard = new Arduino(this, Arduino.list()[0],57600);
+  ard.pinMode(LEFT_IN_PIN, ard.INPUT);
+  ard.pinMode(RIGHT_IN_PIN, ard.INPUT);
+  status = ArduinoStatus.untilted;
   player = new Player();
   enemy = new Enemy();
   score = 0;
@@ -31,13 +48,25 @@ void draw() {
     background(0);
     player.draw();
     enemy.draw();
+
+    //update arduino status
+    if (ard.digitalRead(LEFT_IN_PIN) == 1 && status != ArduinoStatus.left_tilted){
+        status = ArduinoStatus.left_tilted;
+    }else if(ard.digitalRead(RIGHT_IN_PIN) == 1 && status != ArduinoStatus.right_tilted){
+        status = ArduinoStatus.right_tilted;
+    }else if (ard.digitalRead(LEFT_IN_PIN) == 0 && ard.digitalRead(RIGHT_IN_PIN) == 0 && status != ArduinoStatus.untilted){
+        status = ArduinoStatus.untilted;
+    }
+
     score += 1;
     fill(255);
     textSize(30);
     textAlign(LEFT);
     text("Score: " + nf(score,8), width / 16, height / 12);
+
     gameOver = enemy.ifHit(player.getx(), player.gety());
   } else {
+
     fill(175);
     textSize(80);
     textAlign(CENTER);
@@ -46,6 +75,7 @@ void draw() {
     text("Your Score: " + nf(score,8), width / 2, height / 2);
     text("Press Enter to Restart", width / 2, height / 2 + 50);
     text("Press Space to Upload Your Score to Scoreboard", width / 2, height / 2 + 100);
+
     if (keyPressed && key == ENTER) {
       //reset the game
       player = new Player();
@@ -82,12 +112,19 @@ class Player extends SpaceShip {
 
   void update() {
     //update position of player
-    if (keyPressed && keyCode == LEFT && x > 80) {
+    if (status == ArduinoStatus.left_tilted){
       x -= PLAYER_MOVE_SPEED;
-    }
-    if (keyPressed && keyCode == RIGHT && x < width - 80) {
+    }else if (status == ArduinoStatus.right_tilted){
       x += PLAYER_MOVE_SPEED;
     }
+
+    //keyboard control:
+    // if (keyPressed && keyCode == LEFT && x > 80) {
+    //   x -= PLAYER_MOVE_SPEED;
+    // }
+    // if (keyPressed && keyCode == RIGHT && x < width - 80) {
+    //   x += PLAYER_MOVE_SPEED;
+    // }
   }
 
   void drawShip() {
