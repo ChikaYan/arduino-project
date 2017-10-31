@@ -25,7 +25,7 @@ final int ENEMY_SIZE = 20;
 final int ENEMY_MOVE_SPEED = 2;
 final int ENEMY_MOVE_DELAY = 100;
 final int ENEMY_SHOOT_DELAY = 200;
-final int BULLET_NUM = 20;
+final int BULLET_NUM = 60;
 final int BULLET_SIZE = 20;
 
 
@@ -200,12 +200,7 @@ class Enemy extends SpaceShip {
           x -= ENEMY_MOVE_SPEED;
         }
       } else {
-        //ensure next target point is far away from last one
-        if (targetx < 800) {
-          targetx = int(random(1100, 1300));
-        } else {
-          targetx = int(random(300, 500));
-        }
+        targetx = findTargetx(targetx);
         hasTarget = true;
         canMove = false;
       }
@@ -215,6 +210,15 @@ class Enemy extends SpaceShip {
         delayCount = 0;
         canMove = true;
       }
+    }
+  }
+
+  int findTargetx(int previousX){
+    //ensure next target point is far away from last one
+    if (targetx < 800) {
+      return int(random(1100, 1300));
+    } else {
+      return int(random(300, 500));
     }
   }
 
@@ -289,7 +293,6 @@ class Bullet {
 
   void draw() {
     update();
-    checkValidity();
     drawBullet();
   }
 
