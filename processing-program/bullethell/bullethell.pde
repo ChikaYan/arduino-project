@@ -27,6 +27,12 @@ final int ENEMY_MOVE_DELAY = 100;
 final int ENEMY_SHOOT_DELAY = 200;
 final int BULLET_NUM = 60;
 final int BULLET_SIZE = 20;
+final Colour PINK = new Colour(247, 134, 244);
+final Colour GREEN = new Colour(117, 237, 138);
+final Colour CYAN = new Colour(117, 237, 230);
+final Colour YELLOW = new Colour(210,247, 62);
+final Colour RED = new Colour(250, 61, 61);
+final Colour BLUE = new Colour(61, 77, 250);
 
 
 enum ArduinoStatus{
@@ -38,10 +44,10 @@ void setup() {
   size(1600, 1200);
   background(0);
   noStroke();
-  ard = new Arduino(this, Arduino.list()[0],57600);
-  ard.pinMode(LEFT_IN_PIN, ard.INPUT);
-  ard.pinMode(RIGHT_IN_PIN, ard.INPUT);
-  status = ArduinoStatus.untilted;
+  // // ard = new Arduino(this, Arduino.list()[0],57600);
+  // ard.pinMode(LEFT_IN_PIN, ard.INPUT);
+  // ard.pinMode(RIGHT_IN_PIN, ard.INPUT);
+  // status = ArduinoStatus.untilted;
   player = new Player();
   enemy = new Enemy();
   score = 0;
@@ -55,13 +61,13 @@ void draw() {
     enemy.draw();
 
     //update arduino status
-    if (ard.digitalRead(LEFT_IN_PIN) == 1 && status != ArduinoStatus.left_tilted){
-        status = ArduinoStatus.left_tilted;
-    }else if(ard.digitalRead(RIGHT_IN_PIN) == 1 && status != ArduinoStatus.right_tilted){
-        status = ArduinoStatus.right_tilted;
-    }else if (ard.digitalRead(LEFT_IN_PIN) == 0 && ard.digitalRead(RIGHT_IN_PIN) == 0 && status != ArduinoStatus.untilted){
-        status = ArduinoStatus.untilted;
-    }
+    // if (ard.digitalRead(LEFT_IN_PIN) == 1 && status != ArduinoStatus.left_tilted){
+    //     status = ArduinoStatus.left_tilted;
+    // }else if(ard.digitalRead(RIGHT_IN_PIN) == 1 && status != ArduinoStatus.right_tilted){
+    //     status = ArduinoStatus.right_tilted;
+    // }else if (ard.digitalRead(LEFT_IN_PIN) == 0 && ard.digitalRead(RIGHT_IN_PIN) == 0 && status != ArduinoStatus.untilted){
+    //     status = ArduinoStatus.untilted;
+    // }
 
     score += 1;
     fill(255);
@@ -117,23 +123,23 @@ class Player extends SpaceShip {
 
   void update() {
     //update position of player
-    if (status == ArduinoStatus.left_tilted){
-      x -= PLAYER_MOVE_SPEED;
-    }else if (status == ArduinoStatus.right_tilted){
-      x += PLAYER_MOVE_SPEED;
-    }
-
-    //keyboard control:
-    // if (keyPressed && keyCode == LEFT && x > 80) {
+    // if (status == ArduinoStatus.left_tilted){
     //   x -= PLAYER_MOVE_SPEED;
-    // }
-    // if (keyPressed && keyCode == RIGHT && x < width - 80) {
+    // }else if (status == ArduinoStatus.right_tilted){
     //   x += PLAYER_MOVE_SPEED;
     // }
+
+    //keyboard control:
+    if (keyPressed && keyCode == LEFT && x > 80) {
+      x -= PLAYER_MOVE_SPEED;
+    }
+    if (keyPressed && keyCode == RIGHT && x < width - 80) {
+      x += PLAYER_MOVE_SPEED;
+    }
   }
 
   void drawShip() {
-    fill(250, 61, 61);
+    fill(RED.getR(), RED.getG(), RED.getB());
     ellipse(x, y, PLAYER_SIZE, PLAYER_SIZE);
   }
 
@@ -168,7 +174,7 @@ class Enemy extends SpaceShip {
   }
 
   void drawShip() {
-    fill(61, 77, 250);
+    fill(BLUE.getR(), BLUE.getG(), BLUE.getB());
     triangle(x, y, x - 2 * ENEMY_SIZE, y - 3 * ENEMY_SIZE, x + 2 * ENEMY_SIZE, y - 3 * ENEMY_SIZE);
   }
 
@@ -227,29 +233,29 @@ class Enemy extends SpaceShip {
     //use colourCode to select different colours for bullets
     switch((colourCode++) % 4){
       case 0:
-        colourR = 247;
-        colourG = 22;
-        colourB = 218;
+        colourR = PINK.getR();
+        colourG = PINK.getG();
+        colourB = PINK.getB();
         break;
       case 1:
-        colourR = 117;
-        colourG = 237;
-        colourB = 138;
+        colourR = GREEN.getR();
+        colourG = GREEN.getG();
+        colourB = GREEN.getB();
         break;
       case 2:
-        colourR = 117;
-        colourG = 237;
-        colourB = 230;
+        colourR = CYAN.getR();
+        colourG = CYAN.getG();
+        colourB = CYAN.getB();
         break;
       case 3:
-        colourR = 210;
-        colourG = 247;
-        colourB = 62;
+        colourR = YELLOW.getR();
+        colourG = YELLOW.getG();
+        colourB = YELLOW.getB();
         break;
       default:
-        colourR = 0;
-        colourG = 0;
-        colourB = 0;
+        colourR = PINK.getR();
+        colourG = PINK.getG();
+        colourB = PINK.getB();
         break;
     }
 
@@ -276,7 +282,7 @@ class Enemy extends SpaceShip {
 class Bullet {
   //for bullets, x,y will be centre of circle
   float x, y, xSpeed, ySpeed;
-  int r,g,b;
+  int r, g, b;
   Bullet(float startx, float starty, float xspeed, float yspeed, int colourR, int colourG, int colourB) {
     x = startx;
     y = starty;
@@ -320,6 +326,25 @@ class Bullet {
   }
 }
 
+class Colour{
+  int R, G, B;
+
+  Colour(int r, int g, int b){
+    R = r;
+    G = g;
+    B = b;
+  }
+
+  int getR(){
+    return R;
+  }
+  int getG(){
+    return G;
+  }
+  int getB(){
+    return B;
+  }
+}
 
 
 
