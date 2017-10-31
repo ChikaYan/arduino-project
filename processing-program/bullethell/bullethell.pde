@@ -225,7 +225,7 @@ class Enemy extends SpaceShip {
   void shoot() {
     int colourR, colourG, colourB;
     //use colourCode to select different colours for bullets
-    switch(colourCode++){
+    switch((colourCode++) % 4){
       case 0:
         colourR = 247;
         colourG = 22;
@@ -251,10 +251,6 @@ class Enemy extends SpaceShip {
         colourG = 0;
         colourB = 0;
         break;
-    }
-    //reset colourCode
-    if (colourCode == 4){
-      colourCode = 0;
     }
 
     for (int i =0; i<BULLET_NUM; i++) {
