@@ -195,28 +195,51 @@ class Enemy extends SpaceShip {
 
   void moveEnemy() {
     //if can move, move enemy towards chosen target, or select new target
-    if (canMove) {
-      if (abs(targetx-x) < ENEMY_MOVE_SPEED) {
-        hasTarget = false;
-      }
-      if (hasTarget) {
-        if (targetx > x) {
-          x += ENEMY_MOVE_SPEED;
-        } else if (targetx < x) {
-          x -= ENEMY_MOVE_SPEED;
-        }
-      } else {
-        targetx = findTargetx(targetx);
-        hasTarget = true;
-        canMove = false;
-      }
-    } else {
+
+    if (!canMove){
       delayCount ++;
       if (delayCount >= ENEMY_MOVE_DELAY) {
         delayCount = 0;
         canMove = true;
       }
+      return;
     }
+    hasTarget = (abs(targetx-x) > ENEMY_MOVE_SPEED) && (targetx != 0);
+    if (!hasTarget){
+      targetx = findTargetx(targetx);
+      hasTarget = true;
+      canMove = false;
+      return;
+    }
+    if (targetx > x) {
+      x += ENEMY_MOVE_SPEED;
+    } else if (targetx < x) {
+      x -= ENEMY_MOVE_SPEED;
+    }
+
+    // if (canMove) {
+    //   if (abs(targetx-x) < ENEMY_MOVE_SPEED) {
+    //     hasTarget = false;
+    //   }
+    //   if (hasTarget) {
+    //     if (targetx > x) {
+    //       x += ENEMY_MOVE_SPEED;
+    //     } else if (targetx < x) {
+    //       x -= ENEMY_MOVE_SPEED;
+    //     }
+    //   } else {
+    //     targetx = findTargetx(targetx);
+    //     hasTarget = true;
+    //     canMove = false;
+    //   }
+    // } else {
+    //   delayCount ++;
+    //   if (delayCount >= ENEMY_MOVE_DELAY) {
+    //     delayCount = 0;
+    //     canMove = true;
+    //   }
+    // }
+
   }
 
   int findTargetx(int previousX){
@@ -334,7 +357,6 @@ class Colour{
     G = g;
     B = b;
   }
-
   int getR(){
     return R;
   }
