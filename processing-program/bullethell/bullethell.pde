@@ -195,7 +195,6 @@ class Enemy extends SpaceShip {
 
   void moveEnemy() {
     //if can move, move enemy towards chosen target, or select new target
-
     if (!canMove){
       delayCount ++;
       if (delayCount >= ENEMY_MOVE_DELAY) {
@@ -216,38 +215,14 @@ class Enemy extends SpaceShip {
     } else if (targetx < x) {
       x -= ENEMY_MOVE_SPEED;
     }
-
-    // if (canMove) {
-    //   if (abs(targetx-x) < ENEMY_MOVE_SPEED) {
-    //     hasTarget = false;
-    //   }
-    //   if (hasTarget) {
-    //     if (targetx > x) {
-    //       x += ENEMY_MOVE_SPEED;
-    //     } else if (targetx < x) {
-    //       x -= ENEMY_MOVE_SPEED;
-    //     }
-    //   } else {
-    //     targetx = findTargetx(targetx);
-    //     hasTarget = true;
-    //     canMove = false;
-    //   }
-    // } else {
-    //   delayCount ++;
-    //   if (delayCount >= ENEMY_MOVE_DELAY) {
-    //     delayCount = 0;
-    //     canMove = true;
-    //   }
-    // }
-
   }
 
   int findTargetx(int previousX){
     //ensure next target point is far away from last one
     if (targetx < 800) {
-      return int(random(1100, 1300));
+      return int(random(1000, 1100));
     } else {
-      return int(random(300, 500));
+      return int(random(500, 600));
     }
   }
 
@@ -288,18 +263,15 @@ class Enemy extends SpaceShip {
   }
 
   boolean ifHit(int playerx, int playery) {
-    boolean ifhit = false;
     for (int i = 0; i < bullets.size(); i++) {
       Bullet bInstance = (Bullet) bullets.get(i);
-      ifhit = bInstance.ifHit(playerx, playery);
-      if (ifhit) {
+      if (bInstance.ifHit(playerx, playery)) {
         return true;
       }
     }
     return false;
   }
 }
-
 
 
 class Bullet {
@@ -332,7 +304,7 @@ class Bullet {
   }
 
   boolean checkValidity() {
-    if (x < - (BULLET_SIZE / 2) || x > width + BULLET_SIZE / 2 || y < -(BULLET_SIZE / 2) || y > height + BULLET_SIZE / 2) {
+    if (x < -(BULLET_SIZE / 2) || x > width + BULLET_SIZE / 2 || y < -(BULLET_SIZE / 2) || y > height + BULLET_SIZE / 2) {
       //bullet has left screen
       return false;
     }
