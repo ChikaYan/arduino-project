@@ -20,12 +20,12 @@ ArduinoStatus status;
 final int LEFT_IN_PIN = 7;
 final int RIGHT_IN_PIN = 8;
 final int PLAYER_MOVE_SPEED = 5;
-final int PLAYER_SIZE = 40;
+final int PLAYER_SIZE = 30;
 final int ENEMY_SIZE = 20;
 final int ENEMY_MOVE_SPEED = 2;
 final int ENEMY_MOVE_DELAY = 100;
-final int ENEMY_SHOOT_DELAY = 200;
-final int BULLET_NUM = 60;
+final int ENEMY_SHOOT_DELAY = 60;
+final int BULLET_NUM = 15;
 final int BULLET_SIZE = 20;
 final Colour PINK = new Colour(247, 134, 244);
 final Colour GREEN = new Colour(117, 237, 138);
@@ -258,7 +258,7 @@ class Enemy extends SpaceShip {
     }
 
     for (int i =0; i<BULLET_NUM; i++) {
-      bullets.add(new Bullet(float(x), float(y), random(-3, 3), random(2, 3), colourR, colourG, colourB));
+      bullets.add(new Bullet(float(x), float(y), random(-10, 10), random(17, 19), colourR, colourG, colourB));
     }
   }
 
@@ -296,6 +296,14 @@ class Bullet {
   void update() {
     x += xSpeed;
     y += ySpeed;
+    //reduce yspeed
+    if (ySpeed > 2){
+      if (y >= height * 4/5){
+        ySpeed = ySpeed * 0.9;
+        xSpeed = xSpeed * 0.95;
+      }
+    }
+
   }
 
   void drawBullet() {
@@ -320,6 +328,7 @@ class Bullet {
     return false;
   }
 }
+
 
 class Colour{
   int R, G, B;
