@@ -9,17 +9,14 @@
 
 import processing.serial.*;
 import cc.arduino.*;
-import de.bezier.data.sql.*;
+
 
 Arduino ard;
 Player player;
 Enemy enemy;
-GameStatus game;
-Boolean uploaded;
-int score, delayCounter;
+boolean gameOver;
+int score;
 ArduinoStatus status;
-MySQL scoreboard;
-String name;
 
 final int LEFT_IN_PIN = 7;
 final int RIGHT_IN_PIN = 8;
@@ -37,11 +34,6 @@ final Colour CYAN = new Colour(117, 237, 230);
 final Colour YELLOW = new Colour(210,247, 62);
 final Colour RED = new Colour(250, 61, 61);
 final Colour BLUE = new Colour(61, 77, 250);
-final String DBHOST = "localhost";
-final String DBPORT = "3306";
-final String DBUSER = "testuser";
-final String DBPASS = "998182aaa";
-final String DBNAME = "test";
 
 
 void setup() {
@@ -55,13 +47,11 @@ void setup() {
   player = new Player();
   enemy = new Enemy();
   score = 0;
-  game = GameStatus.proceeding;
-  name = "";
-  delayCounter = 0;
+  gameOver = false;
 }
 
 void draw() {
-  if (game == GameStatus.proceeding) {
+  if (!gameOver) {
     background(0);
     player.draw();
     enemy.draw();
@@ -81,10 +71,9 @@ void draw() {
     textAlign(LEFT);
     text("Score: " + nf(score,8), width / 16, height / 12);
 
-    if (enemy.ifHit(player.getx(), player.gety())){
-      game = GameStatus.over;
-    }
-  } else if (game == GameStatus.over){
+    gameOver = enemy.ifHit(player.getx(), player.gety());
+  } else {
+
     fill(175);
     textSize(80);
     textAlign(CENTER);
@@ -93,90 +82,16 @@ void draw() {
     text("Your Score: " + nf(score,8), width / 2, height / 2);
     text("Press Enter to Restart", width / 2, height / 2 + 50);
     text("Press Space to Upload Your Score to Scoreboard", width / 2, height / 2 + 100);
+
     if (keyPressed && key == ENTER) {
-      setup();
-    }else if (keyPressed && key == ' '){
-      game = GameStatus.inputing;
-    }
-  }else if (game == GameStatus.inputing){
-    fill(200);
-    background(0);
-    textSize(40);
-    textAlign(LEFT);
-    text("Please enter your name (letters, numbers and spaces only):", width / 12, height / 8);
-    text(name, width / 12, height / 8 + 60);
-  }else if (game == GameStatus.uploading){
-    background(0);
-    fill(200);
-    textSize(80);
-    textAlign(CENTER);
-    if (uploaded){
-      text("Upload sucess!", width / 2, height / 2 - 50);
-    }else{
-      text("Unable to connect to database!", width / 2, height / 2 - 50);
-    }
-    delayCounter += 1;
-    if (delayCounter >= 120){
-      setup();
+      //reset the game
+      player = new Player();
+      enemy = new Enemy();
+      background(0);
+      score = 0;
+      gameOver = false;
     }
   }
-}
-
-void keyReleased(){
-  //read user inpput for name
-  if (game == GameStatus.inputing){
-    if (key == ENTER){
-      game = GameStatus.uploading;
-      uploaded = upload();
-    }else if(key == BACKSPACE){
-      if (name.length() > 0){
-        name = name.substring(0, name.length()-1);
-      }
-    }else if ((key >= '0' && key <= '9') || (key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || key == ' '){
-      //ensure length of name does not exceed limit of database column
-      if (name.length() < 50){
-        name += str(key);
-      }
-    }
-  }
-}
-
-Boolean upload(){
-  int ranking = 1;
-  Boolean foundPosition = false;
-  scoreboard = new MySQL(this, DBHOST + ":" + DBPORT, DBNAME, DBUSER, DBPASS);
-
-  if (scoreboard.connect()){
-    scoreboard.query("SELECT * FROM scoreboard ORDER BY rank");
-    while(scoreboard.next() && foundPosition == false){
-      if (int(scoreboard.getString("score")) < score){
-        // inserting position found
-        ranking = int(scoreboard.getString("rank"));
-        foundPosition = true;
-      }
-      if (foundPosition){
-        scoreboard.query("UPDATE scoreboard SET rank = rank + 1 WHERE rank >= " + str(ranking));
-        scoreboard.query("INSERT INTO scoreboard (rank, score, name) VALUES(" + str(ranking) + ", " + str(score)+ ", \" " + name + " \")");
-      }
-    }
-
-    //postion not found -- either ranking at last place or table is empty
-    if (!foundPosition){
-      scoreboard.query("SELECT * FROM scoreboard");
-      if (scoreboard.next()){
-        //if table is not empty -- rank = max rank + 1
-        scoreboard.query("SELECT MAX(rank) FROM scoreboard");
-        scoreboard.next();
-        ranking = int(scoreboard.getString("MAX(rank)")) + 1;
-      }
-      scoreboard.query("INSERT INTO scoreboard (rank, score, name) VALUES(" + str(ranking) + ", " + str(score)+ ", \" " + name + " \")");
-    }
-
-    return true;
-  }
-  // unable to connect to database
-  return false;
-
 }
 
 
@@ -418,6 +333,7 @@ class Colour{
     return B;
   }
 }
+
 
 
 
