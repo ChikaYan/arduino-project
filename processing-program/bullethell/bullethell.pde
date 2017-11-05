@@ -37,11 +37,10 @@ final Colour CYAN = new Colour(117, 237, 230);
 final Colour YELLOW = new Colour(210,247, 62);
 final Colour RED = new Colour(250, 61, 61);
 final Colour BLUE = new Colour(61, 77, 250);
-final String DBHOST = "localhost";
-final String DBPORT = "3306";
-final String DBUSER = "testuser";
-final String DBPASS = "998182aaa";
-final String DBNAME = "test";
+final String DBHOST = "eu-cdbr-azure-west-b.cloudapp.net";
+final String DBUSER = "bcf74a4a937449";
+final String DBPASS = "da4028d8";
+final String DBNAME = "arduinocoursework";
 
 
 void setup() {
@@ -144,7 +143,7 @@ void keyReleased(){
 Boolean upload(){
   int ranking = 1;
   Boolean foundPosition = false;
-  db = new MySQL(this, DBHOST + ":" + DBPORT, DBNAME, DBUSER, DBPASS);
+  db = new MySQL(this, DBHOST, DBNAME, DBUSER, DBPASS);
 
   if (db.connect()){
     db.query("SELECT * FROM scoreboard ORDER BY rank");
