@@ -18,7 +18,7 @@ GameStatus game;
 Boolean uploaded;
 int score, delayCounter;
 ArduinoStatus status;
-MySQL scoreboard;
+MySQL db;
 String name;
 
 final int LEFT_IN_PIN = 7;
@@ -144,32 +144,32 @@ void keyReleased(){
 Boolean upload(){
   int ranking = 1;
   Boolean foundPosition = false;
-  scoreboard = new MySQL(this, DBHOST + ":" + DBPORT, DBNAME, DBUSER, DBPASS);
+  db = new MySQL(this, DBHOST + ":" + DBPORT, DBNAME, DBUSER, DBPASS);
 
-  if (scoreboard.connect()){
-    scoreboard.query("SELECT * FROM scoreboard ORDER BY rank");
-    while(scoreboard.next() && foundPosition == false){
-      if (int(scoreboard.getString("score")) < score){
+  if (db.connect()){
+    db.query("SELECT * FROM scoreboard ORDER BY rank");
+    while(db.next() && foundPosition == false){
+      if (int(db.getString("score")) < score){
         // inserting position found
-        ranking = int(scoreboard.getString("rank"));
+        ranking = int(db.getString("rank"));
         foundPosition = true;
       }
       if (foundPosition){
-        scoreboard.query("UPDATE scoreboard SET rank = rank + 1 WHERE rank >= " + str(ranking));
-        scoreboard.query("INSERT INTO scoreboard (rank, score, name) VALUES(" + str(ranking) + ", " + str(score)+ ", \" " + name + " \")");
+        db.query("UPDATE scoreboard SET rank = rank + 1 WHERE rank >= " + str(ranking));
+        db.query("INSERT INTO scoreboard (rank, score, name) VALUES(" + str(ranking) + ", " + str(score)+ ", \" " + name + " \")");
       }
     }
 
     //postion not found -- either ranking at last place or table is empty
     if (!foundPosition){
-      scoreboard.query("SELECT * FROM scoreboard");
-      if (scoreboard.next()){
+      db.query("SELECT * FROM scoreboard");
+      if (db.next()){
         //if table is not empty -- rank = max rank + 1
-        scoreboard.query("SELECT MAX(rank) FROM scoreboard");
-        scoreboard.next();
-        ranking = int(scoreboard.getString("MAX(rank)")) + 1;
+        db.query("SELECT MAX(rank) FROM scoreboard");
+        db.next();
+        ranking = int(db.getString("MAX(rank)")) + 1;
       }
-      scoreboard.query("INSERT INTO scoreboard (rank, score, name) VALUES(" + str(ranking) + ", " + str(score)+ ", \" " + name + " \")");
+      db.query("INSERT INTO scoreboard (rank, score, name) VALUES(" + str(ranking) + ", " + str(score)+ ", \" " + name + " \")");
     }
 
     return true;
