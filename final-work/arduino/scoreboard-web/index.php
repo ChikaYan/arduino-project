@@ -52,6 +52,7 @@ Create by Walter at 05/11/17 -->
                      echo "</tr>";
                  }
                  $result->free();
+                 $db -> close();
             ?>
         </table>
     </body>
