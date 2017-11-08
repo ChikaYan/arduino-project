@@ -45,7 +45,7 @@ final Colour RED = new Colour(250, 61, 61);
 final Colour BLUE = new Colour(61, 77, 250);
 final String DBHOST = "eu-cdbr-azure-west-b.cloudapp.net";
 final String DBUSER = "bcf74a4a937449";
-final String DBPASS = "da4028d8";
+final String DBPASS = "fb35064177cf9e0";
 final String DBNAME = "arduinocoursework";
 
 

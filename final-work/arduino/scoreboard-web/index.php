@@ -32,7 +32,7 @@ Create by Walter at 05/11/17 -->
             <?php
                  $dbhost = "eu-cdbr-azure-west-b.cloudapp.net";
                  $dbuser = "bcf74a4a937449";
-                 $dbpass = "da4028d8";
+                 $dbpass = "fb35064177cf9e0";
                  $dbname = "arduinocoursework";
                  $db = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
                  if ($db -> connect_error){
