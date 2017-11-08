@@ -1,0 +1,23 @@
+$fn=50;
+
+translate([71,4,0.3]){
+    cube([7,57,2]);
+}
+translate([73,2,0.3]){
+    cube([3,2,2]);
+}
+translate([73,61,0.3]){
+    cube([3,2,2]);
+}
+translate([78,16,0.3]){
+    cube([2,3,2]);
+}
+translate([78,45,0.3]){
+    cube([2,3,2]);
+}
+translate([73,8,0.3]){
+    cylinder(7.2,1,1);
+}
+translate([73,57,0.3]){
+    cylinder(7.2,1,1);
+}
