@@ -1,4 +1,7 @@
 /*
+  This code was uploaded to Arduino UNO in order to enable the Processing's Arduino library
+  The sketch is obtained at Arduino IDE > Examples > Firmata > StandardFirmata
+  
   Firmata is a generic protocol for communicating with microcontrollers
   from software on a host computer. It is intended to work with
   any host computer software package.

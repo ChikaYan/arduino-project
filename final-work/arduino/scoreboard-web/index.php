@@ -41,17 +41,17 @@ Create by Walter at 05/11/17 -->
                  $query = "SELECT rank, score, name ";
                  $query .= "FROM scoreboard ";
                  $query .= "ORDER BY rank";
-                 if (!$result = $db->query($query)){
+                 if (!$result = $db -> query($query)){
                      die("Query failed");
                  }
-                 while ($row = $result->fetch_assoc()){
+                 while ($row = $result -> fetch_assoc()){
                      echo "<tr>";
                      echo "<td>" . $row["rank"] . "</td>";
                      echo "<td>" . $row["score"] . "</td>";
                      echo "<td>" . $row["name"] . "</td>";
                      echo "</tr>";
                  }
-                 $result->free();
+                 $result -> free();
                  $db -> close();
             ?>
         </table>
